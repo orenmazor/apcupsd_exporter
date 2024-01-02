@@ -1,0 +1,23 @@
+# https://taskfile.dev
+
+version: '3'
+
+# match the tags manually to the existing apcups version
+# yes this is manual but I will probably never look at
+# this code again
+vars:
+  VERSION: "v0.3.0-2"
+
+tasks:
+  build:
+    cmds:
+      - GOOS=linux GOARCH=amd64 go build ./cmd/apcupsd_exporter
+
+  build-docker:
+    cmds:
+      - task: build
+      - docker build -t orenmazor/apcupsd_exporter:{{ .VERSION }} .
+
+  push-docker-hub:
+    cmds:
+      - docker push orenmazor/apcupsd_exporter:{{ .VERSION }}
